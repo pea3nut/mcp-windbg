@@ -89,48 +89,6 @@ Ask for `mcp-windbg-agents:crash-analyst` to investigate a dump through your
 existing connection. This [agents plugin](plugin.md#agents-for-an-existing-server)
 works independently of the skills plugin and does not install a server.
 
-## Cursor, Codex, and Gemini CLI with agent-add
-
-[agent-add](https://github.com/pea3nut/agent-add) can register the same server
-definition in multiple clients. After the `pip install` above, save this as
-`windbg.mcp.json` in your working project. Use the absolute path to Python if
-your client does not inherit the environment where you installed `mcp-windbg`.
-
-```json
-{
-  "mcpServers": {
-    "mcp-windbg": {
-      "command": "python",
-      "args": ["-m", "mcp_windbg"],
-      "env": {
-        "_NT_SYMBOL_PATH": "SRV*C:\\Symbols*https://msdl.microsoft.com/download/symbols"
-      }
-    }
-  }
-}
-```
-
-With Node.js 18+ installed, run from that project:
-
-```bash
-npx -y agent-add@1.3.1 --host cursor --mcp ./windbg.mcp.json
-```
-
-Use `--host codex` or `--host gemini` for those clients. The default scope is the
-current project; add `--global` for user scope. Restart the client and verify
-that it connects; registration does not check the debugger or symbol downloads.
-
-For Cursor, you can also install an optional workflow alongside the server.
-From the same project, replace the source path with your checkout's absolute path:
-
-```bash
-npx -y agent-add@1.3.1 --host cursor --mcp ./windbg.mcp.json --skill /absolute/path/to/mcp-windbg/plugins/mcp-windbg-skills/skills/analyze-dump
-```
-
-Repeat with `debug-remote`, `kernel-debug`, or `windbg-doctor` to add those workflows.
-The skills use the existing MCP connection. The crash-analyst agent remains a
-separate [Claude Code install](#agents-for-an-existing-server).
-
 ## Claude Desktop
 
 Add to `claude_desktop_config.json` (at `%APPDATA%\Claude\claude_desktop_config.json`):
@@ -151,6 +109,17 @@ Add to `claude_desktop_config.json` (at `%APPDATA%\Claude\claude_desktop_config.
 
 Restart Claude Desktop completely after saving. For background, see
 [Connect local MCP servers](https://modelcontextprotocol.io/docs/develop/connect-local-servers).
+
+## Other clients with Agent Add
+
+Save the Claude Desktop JSON above as `windbg.mcp.json`, then use
+[Agent Add](https://github.com/pea3nut/agent-add) and select your client:
+
+```bash
+npx -y agent-add --mcp ./windbg.mcp.json
+```
+
+Needs Node.js 18+.
 
 ## VS Code (GitHub Copilot)
 
