@@ -116,7 +116,7 @@ Save the Claude Desktop JSON above as `windbg.mcp.json`, then use
 [Agent Add](https://github.com/pea3nut/agent-add) and select your client:
 
 ```bash
-npx -y agent-add --mcp ./windbg.mcp.json
+npx -y agent-add --global --mcp ./windbg.mcp.json
 ```
 
 Needs Node.js 18+.
